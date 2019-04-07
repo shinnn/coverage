@@ -1,0 +1,8 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: node:alpine
+    steps:
+      - checkout
+      - run: npm install-ci-test

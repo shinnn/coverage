@@ -1,0 +1,12 @@
+if: branch !~ ^v\d
+language: node_js
+node_js: node
+cache: npm
+jobs:
+  include:
+  - dist: xenial
+    script: node . node . test.js
+  - dist: xenial
+    script: CI="" npx c8 node . node -p "'Test for non-CI environments'"  && npx c8 report --reporter=text-lcov > coverage.lcov && bash <(curl -s https://codecov.io/bash) -X gcov -f coverage.lcov
+  - os: windows
+    script: node test.js
