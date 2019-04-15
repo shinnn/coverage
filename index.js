@@ -20,7 +20,7 @@ normalizePackageData(c8PackageData);
 const c8BinPath = join(dirname(c8PackageJsonPath), c8PackageData.bin.c8);
 const [nodePath] = process.argv;
 const optionArgs = process.argv.slice(2);
-const [command] = yargsParser(optionArgs)._;
+const {_: [command], reporter} = yargsParser(optionArgs);
 const promisifiedWhich = promisify(which);
 const timeout = 2 ** 32 / 2 - 1;
 const willUploadLcov = /^1|true$/ui.test(process.env.CI) || !!process.env.GITHUB_ACTION;
@@ -56,8 +56,10 @@ const willUploadLcov = /^1|true$/ui.test(process.env.CI) || !!process.env.GITHUB
 			nodePath,
 			[
 				c8BinPath,
-				'--reporter=text',
-				`--reporter=${willUploadLcov ? 'lcovonly' : 'html'}`,
+				...reporter === undefined ? [
+					'--reporter=text',
+					`--reporter=${willUploadLcov ? 'lcovonly' : 'html'}`
+				] : [],
 				...optionArgs
 			]
 		];

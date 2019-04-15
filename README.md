@@ -52,12 +52,34 @@ Once this package is installed to the project directory, users can execute `cove
 Execute a JavaScript file with Node.js or run a command, print code coverage to the stdout and write [HTML reports](https://istanbul.js.org/docs/advanced/alternative-reporters/#html) under the `./coverage` directory.
 
 ```console
-$ coverage /path/to/entry-point.js
-# ↑ is the same as ↓
+$ coverage /path/to/entry-point.js # ↑ is the same as ↓
 $ coverage node /path/to/entry-point.js
 ```
 
-When the execution exits with code `0` on a CI service or GitHub Actions, it automatically uploads the generated coverage to [Codecov](https://docs.codecov.io/docs). Whether `CODECOV_TOKEN` environment variable is required or not varies between [services](https://github.com/codecov/codecov-bash#ci-providers).
+Users can override the default format of reports with `--reporter` option.
+
+```console
+$ coverage example.js
+------------|----------|----------|----------|----------|-------------------|
+File        |  % Stmts | % Branch |  % Funcs |  % Lines | Uncovered Line #s |
+------------|----------|----------|----------|----------|-------------------|
+All files   |      100 |      100 |      100 |      100 |                   |
+ example.js |      100 |      100 |      100 |      100 |                   |
+------------|----------|----------|----------|----------|-------------------|
+
+$ coverage --reporter=text-summary example.js
+
+=============================== Coverage summary ===============================
+Statements   : 100% ( 1/1 )
+Branches     : 100% ( 1/1 )
+Functions    : 100% ( 0/0 )
+Lines        : 100% ( 1/1 )
+================================================================================
+
+$ coverage --reporter=none example.js # No reports
+```
+
+When the execution exits with code `0` on a CI service or [GitHub Actions](https://github.com/features/actions), it automatically uploads the generated coverage to [Codecov](https://docs.codecov.io/docs). Whether `CODECOV_TOKEN` environment variable is required or not varies between [services](https://github.com/codecov/codecov-bash#ci-providers).
 
 ```console
 $ coverage test.js
