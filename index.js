@@ -2,7 +2,7 @@
 'use strict';
 
 const {createWriteStream, mkdir} = require('fs');
-const {dirname, join, resolve: resolvePath} = require('path');
+const {dirname, extname, join, resolve: resolvePath} = require('path');
 const {promisify} = require('util');
 const {spawn} = require('child_process');
 
@@ -58,9 +58,20 @@ const codecovBashPath = process.platform === 'win32' ? join(cwd, 'coverage', uui
 	}
 
 	const prepareArgs = (async () => {
-		try {
-			await promisifiedWhich(command);
-		} catch {
+		const ext = extname(command).slice(1).toLowerCase();
+		let isJavaScriptFile = false;
+
+		if (ext === 'cjs' || ext === 'js' || ext === 'mjs') {
+			isJavaScriptFile = true;
+		} else {
+			try {
+				await promisifiedWhich(command);
+			} catch {
+				isJavaScriptFile = true;
+			}
+		}
+
+		if (isJavaScriptFile) {
 			let entryPath = resolvePath(cwd, command);
 
 			try {
