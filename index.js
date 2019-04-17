@@ -31,6 +31,22 @@ const isTravisCi = process.env.TRAVIS === 'true';
 const codecovBashPath = process.platform === 'win32' ? join(cwd, 'coverage', uuidV4()) : null;
 
 (async () => {
+	// Remove this workaround when https://github.com/istanbuljs/v8-to-istanbul/pull/16 is merged
+	if (process.platform === 'win32') {
+		try {
+			const patchPath = require.resolve('./patch.txt');
+			const {readFile, unlink, writeFile} = require('fs');
+
+			const originalScriptPath = require.resolve('v8-to-istanbul/lib/script');
+			const originalScript = await promisify(readFile)(originalScriptPath, 'utf8');
+			await promisify(writeFile)(originalScriptPath, originalScript.replace(
+				/_buildLines \(source, lines, shebangLength\) \{[^9]*(?=applyCoverage)/um,
+				await promisify(readFile)(patchPath, 'utf8')
+			));
+			await promisify(unlink)(patchPath);
+		} catch {}
+	}
+
 	if (command === undefined) {
 		require(c8BinPath);
 		return;

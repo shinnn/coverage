@@ -1,0 +1,14 @@
+_buildLines(source, lines, shebangLength) {
+	let position = 0;
+	for (const [i, lineStr] of source.trim().split(/(?<=\r?\n)/u).entries()) {
+		const matchedNewLineChar = lineStr.match(/\r?\n$/u);
+		const newLineLength = matchedNewLineChar ? matchedNewLineChar[0].length : 0;
+		this.eof = position + lineStr.length - newLineLength;
+		const line = new CovLine(i + 1, position, this.eof);
+		if (i === 0 && shebangLength !== 0) {
+			line.count = 1;
+		}
+		lines.push(line);
+		position += lineStr.length;
+	}
+}
