@@ -11,7 +11,7 @@
 	},
 	"files": [
 		"index.js",
-		"nycrc.json"
+		"patch.txt"
 	],
 	"bin": {
 		"coverage": "index.js"
@@ -36,6 +36,7 @@
 		"c8": "^3.5.0",
 		"foreground-child": "^1.5.6",
 		"normalize-package-data": "^2.5.0",
+		"slash": "^2.0.0",
 		"which": "^1.3.1",
 		"yargs-parser": "^13.0.0"
 	},

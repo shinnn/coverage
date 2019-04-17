@@ -8,6 +8,7 @@ const {spawn} = require('child_process');
 
 const foregroundChild = require('foreground-child');
 const normalizePackageData = require('normalize-package-data');
+const slash = require('slash');
 const which = require('which');
 const yargsParser = require('yargs-parser');
 
@@ -176,7 +177,7 @@ const willUploadLcov = /^1|true$/ui.test(process.env.CI) || !!process.env.GITHUB
 			'-X',
 			'gcovout',
 			'-f',
-			join(cwd, 'coverage', 'lcov.info')
+			slash(join(cwd, 'coverage', 'lcov.info'))
 		]
 	] : [
 		'npx',
