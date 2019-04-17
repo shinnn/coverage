@@ -4,7 +4,7 @@
 [![Github Actions](https://action-badges.now.sh/shinnn/coverage)](https://wdp9fww0r9.execute-api.us-west-2.amazonaws.com/production/results/shinnn/coverage)
 [![Build Status](https://travis-ci.com/shinnn/coverage.svg?branch=master)](https://travis-ci.com/shinnn/coverage)
 [![Build status](https://ci.appveyor.com/api/projects/status/x5huttqwjqfpl05q/branch/master?svg=true)](https://ci.appveyor.com/project/ShinnosukeWatanabe/coverage/branch/master)
-[![CircleCI](https://circleci.com/gh/shinnn/coverage/tree/master.svg?style=svg)](https://circleci.com/gh/shinnn/coverage/tree/master)
+[![CircleCI](https://circleci.com/gh/shinnn/coverage/tree/master.svg?style=shield)](https://circleci.com/gh/shinnn/coverage/tree/master)
 [![codecov](https://codecov.io/gh/shinnn/coverage/branch/master/graph/badge.svg)](https://codecov.io/gh/shinnn/coverage)
 
 A command-line tool to collect and report code coverage of a JavaScript program
