@@ -204,11 +204,17 @@ const codecovBashPath = process.platform === 'win32' ? join(cwd, 'coverage', uui
 		[
 			...codecovBashPath ? [codecovBashPath] : ['-c', codecovBash, '--'],
 			'-X',
-			'gcov',
-			'-X',
 			'coveragepy',
 			'-X',
+			'fix',
+			'-X',
+			'gcov',
+			'-X',
 			'gcovout',
+			'-X',
+			'search',
+			'-X',
+			'xcode',
 			'-f',
 			slash(join(cwd, 'coverage', 'lcov.info'))
 		]
