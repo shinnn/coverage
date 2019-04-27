@@ -27,9 +27,10 @@ All files |    95.15 |    79.52 |      100 |    95.09 |                   |
 ----------|----------|----------|----------|----------|-------------------|
 ```
 
-This is a wrapper of [c8](https://github.com/bcoe/c8), different in the following points:
+This is an opinionated wrapper of [c8](https://github.com/bcoe/c8), different in the following points:
 
 * Runs both [`html` and `text` reporter](https://github.com/istanbuljs/nyc#running-reports) by default
+* Automatically enables [ECMAScript module](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/import) support for `.mjs` files
 * The first argument can be a JavaScript file path instead of a command
 * Built-in [Codecov](https://codecov.io) support
 
@@ -49,12 +50,18 @@ Once this package is installed to the project directory, users can execute `cove
 
 <img alt="An example of the HTML report" src="screenshot.png" width="330px" align="right">
 
-Execute a JavaScript file with Node.js or run a command, print code coverage to the stdout and write [HTML reports](https://istanbul.js.org/docs/advanced/alternative-reporters/#html) under the `./coverage` directory.
+Execute the command, print code coverage to the stdout and write [HTML reports](https://istanbul.js.org/docs/advanced/alternative-reporters/#html) under the `./coverage` directory.
+
+`<file|command>` can be either a JavaScript file path or a command. If a path is provided, the file is run with the `node` command.
 
 ```console
-$ coverage /path/to/entry-point.js # ↑ is the same as ↓
+$ coverage /path/to/entry-point.js # is the same as ↓
 $ coverage node /path/to/entry-point.js
 ```
+
+If the provided JavaScript path ends with `.mjs`, [ECMAScript module mode](https://nodejs.org/api/esm.html) is automatically [enabled](https://nodejs.org/api/esm.html#esm_enabling) and [`--es-module-specifier-resolution`](https://nodejs.org/api/esm.html#esm_customizing_esm_specifier_resolution_algorithm) is set to `node`.
+
+#### Reporters
 
 Users can override the default format of reports with `--reporter` option.
 
@@ -78,6 +85,8 @@ Lines        : 100% ( 1/1 )
 
 $ coverage --reporter=none example.js # No reports
 ```
+
+#### Codecov integration
 
 When the execution exits with code `0` on a CI service or [GitHub Actions](https://github.com/features/actions), it automatically uploads the generated coverage to [Codecov](https://docs.codecov.io/docs). Whether `CODECOV_TOKEN` environment variable is required or not varies between [services](https://github.com/codecov/codecov-bash#ci-providers).
 

@@ -20,7 +20,7 @@ const c8PackageData = require(c8PackageJsonPath);
 normalizePackageData(c8PackageData);
 
 const c8BinPath = join(dirname(c8PackageJsonPath), c8PackageData.bin.c8);
-const [nodePath] = process.argv;
+const nodePath = process.execPath;
 const optionArgs = process.argv.slice(2);
 const {_: [command], reporter} = yargsParser(optionArgs);
 const promisifiedWhich = promisify(which);
@@ -65,7 +65,17 @@ const codecovBashPath = process.platform === 'win32' ? join(cwd, 'coverage', uui
 				process.exit(127);
 			}
 
-			optionArgs.splice(optionArgs.indexOf(command), 1, nodePath, entryPath);
+			optionArgs.splice(
+				optionArgs.indexOf(command),
+				1,
+				nodePath,
+				...ext === 'mjs' ? [
+					'--experimental-modules',
+					'--es-module-specifier-resolution=node',
+					'--no-warnings'
+				] : [],
+				entryPath
+			);
 		}
 
 		return [

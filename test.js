@@ -1,14 +1,16 @@
 'use strict';
 
+const {dirname, join} = require('path');
 const {execFile} = require('child_process');
-const {join} = require('path');
+const {mkdir, writeFile} = require('fs').promises;
 const {promisify} = require('util');
 
 const attempt = require('lodash/attempt');
+const rmfr = require('rmfr');
 const test = require('tape');
 
 const coverage = require.resolve('.');
-const execNode = promisify(execFile).bind(null, process.argv[0]);
+const execNode = promisify(execFile).bind(null, process.execPath);
 const timeout = 1000000;
 
 test('A `coverage` command with a command', async t => {
@@ -54,14 +56,14 @@ test('A `coverage` command with a file path', async t => {
 	t.end();
 });
 
-test('A `coverage` command with nyc flags', async t => {
+test('A `coverage` command with c8 flags', async t => {
 	try {
 		await execNode([coverage, '--reporter=unknown', 'node', '--version'], {timeout});
 		t.fail('Unexpectedly succeeded.');
 	} catch ({stderr}) {
 		t.ok(
 			stderr.includes('Cannot find module \'unknown\''),
-			'should pass flags to the underlying `nyc` command.'
+			'should pass flags to the underlying `c8` command.'
 		);
 	}
 
@@ -158,3 +160,22 @@ test('A `coverage report` command', async t => {
 
 	t.end();
 });
+
+if (Number(process.versions.node.split('.')[0]) >= 12) {
+	test('A `coverage` command with a .mjs file path', async t => {
+		const tmpFile = join(__dirname, 'tmp', 'tmp.mjs');
+
+		await rmfr(dirname(tmpFile));
+		await mkdir(dirname(tmpFile));
+		await writeFile(tmpFile, 'import {open} from "fs"');
+		await execNode([
+			coverage,
+			'--exclude=tmp.mjs',
+			`--temp-directory=${join(dirname(tmpFile), '_')}`,
+			tmpFile
+		], {timeout});
+		t.pass('should enable ECMAScript modules for .mjs files automatically.');
+
+		t.end();
+	});
+}
