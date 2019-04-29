@@ -37,6 +37,7 @@
 		"foreground-child": "^1.5.6",
 		"normalize-package-data": "^2.5.0",
 		"slash": "^3.0.0",
+		"test-exclude": "^5.2.2",
 		"uuid": "^3.3.2",
 		"which": "^1.3.1",
 		"yargs-parser": "^13.0.0"

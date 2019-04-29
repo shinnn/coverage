@@ -96,6 +96,8 @@ const codecovBashPath = process.platform === 'win32' ? join(cwd, 'coverage', uui
 			nodePath,
 			[
 				c8BinPath,
+				// Remove this when https://github.com/istanbuljs/istanbuljs/pull/381 is merged
+				...require('test-exclude').defaultExclude.map(pattern => `--exclude="${pattern.replace(/(?<=\.)(?=js$)/ui, '{,c,m}')}"`),
 				...reporter === undefined ? [
 					'--reporter=text',
 					`--reporter=${willUploadLcov ? 'lcovonly' : 'html'}`
