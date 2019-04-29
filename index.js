@@ -39,8 +39,7 @@ const codecovBashPath = process.platform === 'win32' ? join(cwd, 'coverage', uui
 		const originalScriptPath = require.resolve('c8/lib/report.js');
 		const originalScript = await promisify(readFile)(originalScriptPath, 'utf8');
 		await promisify(writeFile)(originalScriptPath, originalScript.replace(
-			`script.applyCoverage(v8ScriptCov.functions)
-        map.merge(script.toIstanbul())`,
+			/(?<=createCoverageMap\(\{\}\)\n\n)[^9]+(?=this\._allCoverageFiles =)/u,
 			await promisify(readFile)(patchPath, 'utf8')
 		));
 		await promisify(unlink)(patchPath);

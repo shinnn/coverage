@@ -1,16 +1,43 @@
-if (v8ScriptCov.functions.every(({ functionName, ranges }) => {
-	if (!script.source.includes(functionName)) {
-		return false
-	}
+const resultCountPerPath = new Map()
+const possibleCjsEsmBridges = new Map()
 
-	for (const { endOffset } of ranges) {
-		if (endOffset > script.source.length) {
-			return false
+for (const v8ScriptCov of v8ProcessCov.result) {
+	try {
+		const path = resolve(this.resolve, v8ScriptCov.url)
+		const script = v8toIstanbul(path, this.wrapperLength)
+
+		if (resultCountPerPath.has(path)) {
+			resultCountPerPath.set(path, resultCountPerPath.get(path) + 1)
+		} else {
+			resultCountPerPath.set(path, 0)
 		}
-	}
 
-	return true
-})) {
-	script.applyCoverage(v8ScriptCov.functions)
-	map.merge(script.toIstanbul())
+		// https://github.com/nodejs/node/blob/v12.0.0/lib/internal/modules/esm/create_dynamic_module.js#L12-L20
+		if (
+			v8ScriptCov.functions.length === 3 &&
+			v8ScriptCov.functions[0].functionName === '' &&
+			v8ScriptCov.functions[0].isBlockCoverage === true &&
+			v8ScriptCov.functions[1].functionName === 'get' &&
+			v8ScriptCov.functions[1].isBlockCoverage === false &&
+			v8ScriptCov.functions[2].functionName === 'set' &&
+			v8ScriptCov.functions[2].isBlockCoverage === true
+		) {
+			possibleCjsEsmBridges.set(script, {
+				path,
+				functions: v8ScriptCov.functions
+			})
+		} else {
+			script.applyCoverage(v8ScriptCov.functions)
+			map.merge(script.toIstanbul())
+		}
+	} catch (err) {
+		console.warn(`file: ${v8ScriptCov.url} error: ${err.stack}`)
+	}
+}
+
+for (const [script, { path, functions }] of possibleCjsEsmBridges) {
+	if (resultCountPerPath.get(path) <= 1) {
+		script.applyCoverage(functions)
+		map.merge(script.toIstanbul())
+	}
 }
