@@ -1,0 +1,16 @@
+if (v8ScriptCov.functions.every(({ functionName, ranges }) => {
+	if (!script.source.includes(functionName)) {
+		return false
+	}
+
+	for (const { endOffset } of ranges) {
+		if (endOffset > script.source.length) {
+			return false
+		}
+	}
+
+	return true
+})) {
+	script.applyCoverage(v8ScriptCov.functions)
+	map.merge(script.toIstanbul())
+}

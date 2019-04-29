@@ -31,6 +31,21 @@ const isTravisCi = process.env.TRAVIS === 'true';
 const codecovBashPath = process.platform === 'win32' ? join(cwd, 'coverage', uuidV4()) : null;
 
 (async () => {
+	// Remove this workaround when https://github.com/bcoe/c8/pull/83 is merged
+	try {
+		const patchPath = require.resolve('./patch.txt');
+		const {readFile, unlink, writeFile} = require('fs');
+
+		const originalScriptPath = require.resolve('c8/lib/report.js');
+		const originalScript = await promisify(readFile)(originalScriptPath, 'utf8');
+		await promisify(writeFile)(originalScriptPath, originalScript.replace(
+			`script.applyCoverage(v8ScriptCov.functions)
+        map.merge(script.toIstanbul())`,
+			await promisify(readFile)(patchPath, 'utf8')
+		));
+		await promisify(unlink)(patchPath);
+	} catch {}
+
 	if (command === undefined) {
 		require(c8BinPath);
 		return;

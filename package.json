@@ -10,7 +10,8 @@
 		"test": "node . node . test.js"
 	},
 	"files": [
-		"index.js"
+		"index.js",
+		"patch.txt"
 	],
 	"bin": {
 		"coverage": "index.js"
