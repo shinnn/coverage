@@ -1,6 +1,6 @@
 {
 	"name": "coverage",
-	"version": "0.2.3",
+	"version": "0.3.0",
 	"description": "A command-line tool to collect and report code coverage of a JavaScript program",
 	"author": "Shinnosuke Watanabe (https://github.com/shinnn)",
 	"repository": "shinnn/coverage",
