@@ -59,7 +59,11 @@ $ coverage /path/to/entry-point.js # is the same as ↓
 $ coverage node /path/to/entry-point.js
 ```
 
-If the provided JavaScript path ends with `.mjs`, [ECMAScript module mode](https://nodejs.org/api/esm.html) is automatically [enabled](https://nodejs.org/api/esm.html#esm_enabling) and [`--es-module-specifier-resolution`](https://nodejs.org/api/esm.html#esm_customizing_esm_specifier_resolution_algorithm) is set to `node`.
+If the provided JavaScript path ends with `.mjs`,
+
+* [ECMAScript module mode](https://nodejs.org/api/esm.html) is automatically [enabled](https://nodejs.org/api/esm.html#esm_enabling).
+* [`--es-module-specifier-resolution`](https://nodejs.org/api/esm.html#esm_customizing_esm_specifier_resolution_algorithm) is automatically set to `node`.
+* [Experimental JSON modules support](https://nodejs.org/api/esm.html#esm_experimental_json_modules) is automatically enabled.
 
 #### Reporters
 

@@ -167,7 +167,7 @@ if (Number(process.versions.node.split('.')[0]) >= 12) {
 
 		await rmfr(dirname(tmpFile));
 		await mkdir(dirname(tmpFile));
-		await writeFile(tmpFile, 'import {open} from "fs"');
+		await writeFile(tmpFile, 'import pkg from "../package"');
 		await execNode([
 			coverage,
 			'--exclude=tmp.mjs',
