@@ -9,7 +9,6 @@ const {spawn} = require('child_process');
 const foregroundChild = require('foreground-child');
 const normalizePackageData = require('normalize-package-data');
 const slash = require('slash');
-const uuidV4 = require('uuid/v4');
 const which = require('which');
 const yargsParser = require('yargs-parser');
 
@@ -28,23 +27,9 @@ const timeout = 2 ** 32 / 2 - 1;
 const willUploadLcov = /^1|true$/ui.test(process.env.CI) || !!process.env.GITHUB_ACTION;
 const isTravisCi = process.env.TRAVIS === 'true';
 // On Windows, write codecov-bash to a file instead of memory to avoid ENAMETOOLONG error
-const codecovBashPath = process.platform === 'win32' ? join(cwd, 'coverage', uuidV4()) : null;
+const codecovBashPath = process.platform === 'win32' ? join(cwd, 'coverage', Math.random().toString()) : null;
 
 (async () => {
-	// Remove this workaround when https://github.com/bcoe/c8/pull/83 is merged
-	try {
-		const patchPath = require.resolve('./patch.txt');
-		const {readFile, unlink, writeFile} = require('fs');
-
-		const originalScriptPath = require.resolve('c8/lib/report.js');
-		const originalScript = await promisify(readFile)(originalScriptPath, 'utf8');
-		await promisify(writeFile)(originalScriptPath, originalScript.replace(
-			/(?<=createCoverageMap\(\{\}\)\n\n)[^9]+(?=this\._allCoverageFiles =)/u,
-			await promisify(readFile)(patchPath, 'utf8')
-		));
-		await promisify(unlink)(patchPath);
-	} catch {}
-
 	if (command === undefined) {
 		require(c8BinPath);
 		return;
