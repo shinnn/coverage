@@ -29,8 +29,9 @@ All files |    95.15 |    79.52 |      100 |    95.09 |                   |
 
 This is an opinionated wrapper of [c8](https://github.com/bcoe/c8), different in the following points:
 
+* Supports multiple file execution `coverage test.js test-2.js`
 * Runs both [`html` and `text` reporter](https://github.com/istanbuljs/nyc#running-reports) by default
-* Automatically enables [ECMAScript module](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/import) support for `.mjs` files
+* Automatically executes `.mjs` files as [ECMAScript modules](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/import)
 * The first argument can be a JavaScript file path instead of a command
 * Built-in [Codecov](https://codecov.io) support
 
