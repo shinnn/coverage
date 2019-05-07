@@ -133,7 +133,7 @@ let exitCode;
 			return results;
 		}
 
-		return [[c8BinPath, ...c8Args, ...optionArgs]];
+		return [[c8BinPath, ...c8Args, ...c8ReporterArgs, ...optionArgs]];
 	})();
 
 	if (!willUploadLcov) {
