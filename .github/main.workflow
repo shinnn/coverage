@@ -20,7 +20,7 @@ action "Test (latest)" {
 action "Test (stable)" {
   uses = "docker://node:10"
   needs = ["Install"]
-  runs = "bash"
+  runs = "npm"
   args = "test"
   secrets = ["CODECOV_TOKEN"]
 }
