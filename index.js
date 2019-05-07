@@ -224,7 +224,7 @@ let exitCode;
 					}
 				})
 			]);
-			client.close();
+			await promisify(client.close.bind(client))();
 
 			return body;
 		})(),
