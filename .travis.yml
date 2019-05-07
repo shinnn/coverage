@@ -7,6 +7,7 @@ jobs:
   - dist: xenial
     script: node . node . test.js
   - dist: xenial
+    node_js: '10'
     script: CI="" npx c8 node . node -p "'Test for non-CI environments'" && npx c8 report --reporter=text-lcov > coverage.lcov && bash <(curl -s https://codecov.io/bash) -X gcov -f coverage.lcov
   - os: windows
     script: npx c8 node . node -p "'Test for Windows'" && npx c8 report --reporter=text-lcov > coverage.lcov && bash <(curl -s https://codecov.io/bash) -X gcov -f coverage.lcov

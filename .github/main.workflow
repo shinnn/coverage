@@ -18,7 +18,7 @@ action "Test (latest)" {
 }
 
 action "Test (stable)" {
-  uses = "docker://node:10"
+  uses = "docker://node"
   needs = ["Install"]
   runs = "npm"
   args = "test"
