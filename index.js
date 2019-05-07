@@ -126,6 +126,10 @@ let exitCode;
 				];
 			});
 
+			if (process.exitCode) {
+				return [];
+			}
+
 			return results;
 		}
 
