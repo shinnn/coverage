@@ -224,6 +224,7 @@ let exitCode;
 					}
 				})
 			]);
+			client.close();
 
 			return body;
 		})(),
@@ -235,17 +236,17 @@ let exitCode;
 			return (await once(spawn(process.execPath, (await prepareArgs)[0], childProcessOptions), 'exit'))[0];
 			*/
 
-			const onExit = code => {
-				if (code) {
-					process.exitCode = code;
-				}
-			};
-
 			for (const args of await prepareArgs) {
 				await new Promise((resolve, reject) => { // eslint-disable-line no-await-in-loop
 					spawn(process.execPath, args, childProcessOptions)
 					.once('error', reject)
-					.once('exit', onExit);
+					.once('exit', code => {
+						if (code) {
+							process.exitCode = code;
+						}
+
+						resolve();
+					});
 				});
 			}
 		})()
