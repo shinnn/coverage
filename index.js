@@ -183,13 +183,15 @@ const codecovBashPath = process.platform === 'win32' ? join(cwd, 'coverage', Mat
 					}
 				})
 			]);
+			await promisify(client.close.bind(client))();
 
 			return body;
 		})()
 	]);
 
 	if (code !== 0) {
-		process.exit(code);
+		process.exitCode = code;
+		return;
 	}
 
 	if (isTravisCi) {
