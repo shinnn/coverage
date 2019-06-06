@@ -72,7 +72,6 @@ const codecovBashPath = process.platform === 'win32' ? join(cwd, 'coverage', Mat
 				...ext === 'mjs' ? [
 					'--experimental-modules',
 					'--es-module-specifier-resolution=node',
-					'--experimental-json-modules',
 					'--no-warnings'
 				] : [],
 				entryPath
