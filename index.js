@@ -1,8 +1,9 @@
 #!/usr/bin/env node
 'use strict';
 
-const {createWriteStream, mkdir} = require('fs');
+const {createWriteStream, promises: {mkdir}} = require('fs');
 const {dirname, extname, join, resolve: resolvePath} = require('path');
+const {once} = require('events');
 const {promisify} = require('util');
 const {spawn} = require('child_process');
 
@@ -100,30 +101,11 @@ const codecovBashPath = process.platform === 'win32' ? join(cwd, 'coverage', Mat
 	}
 
 	const [code, codecovBash] = await Promise.all([
-		(async () => {
-			/*
-			On Node.js >= 11.3.0, const {once} = require('events') is available
-			https://nodejs.org/api/events.html#events_events_once_emitter_name
-
-			return (await once(spawn(...await prepareArgs, {
-				cwd,
-				stdio: 'inherit',
-				timeout
-			}), 'exit'))[0];
-			*/
-
-			const args = await prepareArgs;
-
-			return new Promise((resolve, reject) => {
-				spawn(...args, {
-					cwd,
-					stdio: 'inherit',
-					timeout
-				})
-				.once('error', reject)
-				.once('exit', resolve);
-			});
-		})(),
+		(async () => (await once(spawn(...await prepareArgs, {
+			cwd,
+			stdio: 'inherit',
+			timeout
+		}), 'exit'))[0])(),
 		(async () => {
 			try {
 				// The default shell of Travis CI Windows build is Git BASH
@@ -131,10 +113,6 @@ const codecovBashPath = process.platform === 'win32' ? join(cwd, 'coverage', Mat
 					await Promise.all([promisifiedWhich('bash'), promisifiedWhich('git')]);
 				}
 			} catch {
-				/*
-				On Node.js >= 11.3.0, const {once} = require('events') is available
-				https://nodejs.org/api/events.html#events_events_once_emitter_name
-
 				await once(spawn('npm', [
 					'install',
 					'--no-package-lock',
@@ -145,19 +123,8 @@ const codecovBashPath = process.platform === 'win32' ? join(cwd, 'coverage', Mat
 					shell: process.platform === 'win32',
 					timeout
 				}), 'exit');
-				*/
 
-				return new Promise(resolve => spawn('npm', [
-					'install',
-					'--no-audit',
-					'--no-package-lock',
-					'--no-save',
-					'codecov@3'
-				], {
-					cwd,
-					shell: process.platform === 'win32',
-					timeout
-				}).once('exit', () => resolve(null)));
+				return null;
 			}
 
 			const {connect} = require('http2');
@@ -171,7 +138,7 @@ const codecovBashPath = process.platform === 'win32' ? join(cwd, 'coverage', Mat
 			request.end();
 
 			if (codecovBashPath) {
-				await promisify(mkdir)(dirname(codecovBashPath), {recursive: true});
+				await mkdir(dirname(codecovBashPath), {recursive: true});
 			}
 
 			await promisify(pipeline)([

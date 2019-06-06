@@ -1,6 +1,6 @@
 workflow "Test" {
   on = "push"
-  resolves = ["Test (latest)", "Test (stable)"]
+  resolves = ["Test (without Git)", "Test (with Git)"]
 }
 
 action "Install" {
@@ -9,7 +9,7 @@ action "Install" {
   args = "ci"
 }
 
-action "Test (latest)" {
+action "Test (without Git)" {
   uses = "docker://node:alpine"
   needs = ["Install"]
   runs = "npm"
@@ -17,8 +17,8 @@ action "Test (latest)" {
   secrets = ["CODECOV_TOKEN"]
 }
 
-action "Test (stable)" {
-  uses = "docker://node:10"
+action "Test (with Git)" {
+  uses = "docker://node"
   needs = ["Install"]
   runs = "npm"
   args = "test"
