@@ -82,8 +82,13 @@ const codecovBashPath = process.platform === 'win32' ? join(cwd, 'coverage', Mat
 			nodePath,
 			[
 				c8BinPath,
-				// Remove this when https://github.com/istanbuljs/istanbuljs/pull/381 is merged
-				...require('test-exclude').defaultExclude.map(pattern => `--exclude="${pattern.replace(/(?<=\.)(?=js$)/ui, '{,c,m}')}"`),
+				...require('test-exclude').defaultExclude.map(pattern => `--exclude="${
+					pattern
+					// Remove this when https://github.com/istanbuljs/istanbuljs/pull/381 is merged
+					.replace(/(?<=\.)(?=js$)/ui, '{,c,m}')
+					// Remove this when https://github.com/istanbuljs/istanbuljs/pull/419 is merged
+					.replace(/(?<=test)(?=\/)/ui, '{,s}')
+				}"`),
 				'--exclude="**/*.json"',
 				...reporter === undefined ? [
 					'--reporter=text',
