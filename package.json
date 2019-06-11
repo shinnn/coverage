@@ -1,6 +1,6 @@
 {
 	"name": "coverage",
-	"version": "0.4.0",
+	"version": "0.4.1",
 	"description": "A command-line tool to collect and report code coverage of a JavaScript program",
 	"author": "Shinnosuke Watanabe (https://github.com/shinnn)",
 	"repository": "shinnn/coverage",
@@ -38,7 +38,7 @@
 		"slash": "^3.0.0",
 		"test-exclude": "^5.2.3",
 		"which": "^1.3.1",
-		"yargs-parser": "^13.1.0"
+		"yargs-parser": "^13.1.1"
 	},
 	"devDependencies": {
 		"@shinnn/eslint-config": "^6.10.4",
